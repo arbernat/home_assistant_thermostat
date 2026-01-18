@@ -1,0 +1,281 @@
+decluttering_templates:
+  indoor_select:
+    card:
+      type: custom:mushroom-select-card
+      entity: input_select.temperature_[[location]]
+      icon_type: none
+      name: Mode
+      fill_container: false
+      layout: horizontal
+  indoor_climate:
+    default:
+      - icon: fire
+    card:
+      type: custom:mini-graph-card
+      name: '[[name]]'
+      entities:
+        - entity: sensor.thermometer_[[location]]_temperature
+          name: Temperature
+        - entity: sensor.thermometer_[[location]]_humidity
+          name: Humidity
+          secondary: true
+          show_graph: false
+          show_state: true
+          color: blue
+      show:
+        labels: true
+        name: false
+        icon: false
+      height: 200
+      color_thresholds:
+        - value: 60
+          color: purple
+        - value: 65
+          color: blue
+        - value: 68
+          color: yellow
+        - value: 72
+          color: orange
+        - value: 75
+          color: red
+      lower_bound: 60
+      upper_bound: ~75
+      card_mod:
+        style: |
+          ha-card {
+            {% if is_state('input_text.thermostat_background_[[location]]', 'heat') %}
+              background: rgba(255, 114, 114, 0.8) !important;
+            {% elif is_state('input_text.thermostat_background_[[location]]', 'cool') %}
+              background: rgba(114, 114, 255, 0.8) !important;
+            {% elif is_state('input_text.thermostat_background_[[location]]', 'conflict') %}
+              background: rgba(139, 139, 139, 0.8) !important;
+            {% else %}
+              background: rgba(255, 255, 255, 0.8) !important;
+            {% endif %}
+          }
+kiosk_mode:
+  non_admin_settings:
+    hide_header: true
+    ignore_entity_settings: true
+    hide_sidebar: true
+views:
+  - title: Home
+    type: custom:simple-tabs
+    alignment: start
+    tabs-gap: 12px
+    default_tab:
+      - tab: 1
+    tabs:
+      - title: Climate
+        icon: mdi:air-conditioner
+        card:
+          type: custom:layout-card
+          layout_type: grid
+          layout:
+            grid-template-columns: 33% 33% 33%
+            grid-template-rows: auto
+            grid-template-areas: |
+              "upstairs danny becky"
+              "downstairs downstairs office"
+          cards:
+            - type: custom:layout-card
+              layout_type: custom:vertical-layout
+              layout: {}
+              view_layout:
+                grid-area: upstairs
+              cards:
+                - type: custom:text-divider-row
+                  text: Upstairs
+                - type: custom:decluttering-card
+                  template: indoor_select
+                  variables:
+                    - location: upstairs
+                - type: custom:decluttering-card
+                  template: indoor_climate
+                  variables:
+                    - location: upstairs
+            - type: custom:layout-card
+              layout_type: custom:vertical-layout
+              layout: {}
+              view_layout:
+                grid-area: danny
+              cards:
+                - type: custom:text-divider-row
+                  text: Danny
+                - type: custom:decluttering-card
+                  template: indoor_select
+                  variables:
+                    - location: danny
+                - type: custom:decluttering-card
+                  template: indoor_climate
+                  variables:
+                    - location: danny
+            - type: custom:layout-card
+              layout_type: custom:vertical-layout
+              layout: {}
+              view_layout:
+                grid-area: becky
+              cards:
+                - type: custom:text-divider-row
+                  text: Becky
+                - type: custom:decluttering-card
+                  template: indoor_select
+                  variables:
+                    - location: becky
+                - type: custom:decluttering-card
+                  template: indoor_climate
+                  variables:
+                    - location: becky
+            - type: custom:layout-card
+              layout_type: custom:vertical-layout
+              layout: {}
+              view_layout:
+                grid-area: downstairs
+              cards:
+                - type: custom:text-divider-row
+                  text: Downstairs
+                - type: custom:mushroom-select-card
+                  entity: input_select.temperature_downstairs
+                  icon_type: none
+                  name: Mode
+                  fill_container: false
+                  layout: horizontal
+                - type: custom:mini-graph-card
+                  height: 150
+                  name: Downstairs
+                  show:
+                    labels: true
+                    name: false
+                    icon: false
+                  entities:
+                    - entity: sensor.thermometer_downstairs_composite
+                      name: Mean
+                      show_graph: false
+                    - entity: sensor.thermometer_living_room_temperature
+                      name: Living Room
+                    - entity: sensor.thermometer_kitchen_temperature
+                      name: Kitchen
+                    - entity: sensor.thermometer_library_temperature
+                      name: Library
+                    - entity: sensor.downstairs_average_humidity
+                      name: Humidity
+                      secondary: true
+                      show_graph: false
+                      show_state: true
+                  lower_bound: 60
+                  upper_bound: ~75
+                  card_mod:
+                    style: |
+                      ha-card {
+                        {% if is_state('input_text.thermostat_background_downstairs', 'heat') %}
+                          background: rgba(255, 114, 114, 0.8) !important;
+                        {% elif is_state('input_text.thermostat_background_downstairs', 'cool') %}
+                          background: rgba(114, 114, 255, 0.8) !important;
+                        {% elif is_state('input_text.thermostat_background_downstairs', 'conflict') %}
+                          background: rgba(139, 139, 139, 0.8) !important;
+                        {% else %}
+                          background: rgba(255, 255, 255, 0.8) !important;
+                        {% endif %}
+                      }
+            - type: custom:layout-card
+              layout_type: custom:vertical-layout
+              layout: {}
+              view_layout:
+                grid-area: office
+              cards:
+                - type: custom:text-divider-row
+                  text: Office
+                - type: custom:decluttering-card
+                  template: indoor_select
+                  variables:
+                    - location: office
+                - type: custom:decluttering-card
+                  template: indoor_climate
+                  variables:
+                    - location: office
+      - title: Outdoors
+        icon: mdi:sun-thermometer
+        card:
+          type: custom:layout-card
+          layout_type: grid
+          layout:
+            grid-template-columns: 50% 50%
+            grid-template-rows: auto
+            grid-template-areas: |
+              "hourly_forecast daily_forecast"
+              "temperature rain"
+          cards:
+            - type: custom:layout-card
+              layout_type: custom:vertical-layout
+              layout: {}
+              view_layout:
+                grid-area: daily_forecast
+              cards:
+                - type: custom:text-divider-row
+                  text: Daily Forecast
+                - type: custom:weather-forecast-extended-card
+                  entity: weather.home
+                  name: Forecast
+                  hourly_forecast: false
+                  show_header: false
+            - type: custom:layout-card
+              layout_type: custom:vertical-layout
+              layout: {}
+              view_layout:
+                grid-area: hourly_forecast
+              cards:
+                - type: custom:text-divider-row
+                  text: Hourly Forecast
+                - type: custom:weather-forecast-extended-card
+                  entity: weather.home
+                  name: Forecast
+                  daily_forecast: false
+                  show_sun_times: true
+                  sun_use_home_coordinates: true
+            - type: custom:layout-card
+              layout_type: custom:vertical-layout
+              layout: {}
+              view_layout:
+                grid-area: temperature
+              cards:
+                - type: custom:text-divider-row
+                  text: Lanai
+                - type: custom:mini-graph-card
+                  entities:
+                    - entity: sensor.weather_station_outdoor_module_temperature
+                      name: Temperature
+                    - entity: sensor.weather_station_outdoor_module_humidity
+                      name: Humidity
+                      secondary: true
+                      show_graph: false
+                      show_state: true
+                      color: blue
+                  show:
+                    labels: true
+                    name: false
+                    icon: false
+                  color_thresholds:
+                    - value: 60
+                      color: blue
+                    - value: 70
+                      color: yellow
+                    - value: 80
+                      color: orange
+                    - value: 90
+                      color: red
+            - type: custom:layout-card
+              layout_type: custom:vertical-layout
+              layout: {}
+              view_layout:
+                grid-area: rain
+              cards:
+                - type: custom:text-divider-row
+                  text: Rain Gauge
+                - type: custom:mini-graph-card
+                  entities:
+                    - entity: sensor.weather_station_smart_rain_gauge_precipitation
+                      name: Rain
+                  show:
+                    labels: true
+                    name: false
+                    icon: false
