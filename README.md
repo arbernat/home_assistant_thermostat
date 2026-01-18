@@ -69,3 +69,15 @@ This is the big one. There are multiple categories of sensors, climate entities,
 
 After all that the dashboard is relatively straightforward. It is one tab of a dedicated Home Assistant iOS app on an iPad in the kitchen. The dashboard is also accessible via a browser. Most of the time it's set it and forget it though.
 
+# HACS
+I have so many HACS repositories. The ones in play here are:
+* mini-graph-card
+* card-mod
+* layout-card
+* pyscript
+* Mushroom
+* Decluttering Card
+* Simple Tabs Card
+* Text Divider Row
+* Weather Card Extended
+* 
