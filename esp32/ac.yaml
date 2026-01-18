@@ -1,0 +1,83 @@
+# Sync time with Home Assistant.
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+# Text sensors with general information.
+text_sensor:
+  # Expose ESPHome version as sensor.
+  - platform: version
+    name: ${name} ESPHome Version
+  # Expose WiFi information as sensors.
+  - platform: wifi_info
+    ip_address:
+      name: ${name} IP
+    ssid:
+      name: ${name} SSID
+    bssid:
+      name: ${name} BSSID
+
+# Sensors with general information.
+sensor:
+  # Uptime sensor.
+  - platform: uptime
+    name: ${name} Uptime
+
+  # WiFi Signal sensor.
+  - platform: wifi_signal
+    name: ${name} WiFi Signal
+    update_interval: 60s
+
+  # External temperature override
+  - platform: homeassistant
+    name: "Remote Temperature Sensor"
+    entity_id: ${remote_temp_sensor}
+    internal: false
+    disabled_by_default: true
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°F"
+    filters:
+      - lambda: return (x - 32) * (5.0/9.0);
+      - clamp: # Limits values to range accepted by Mitsubishi units
+          min_value: 1
+          max_value: 40
+          ignore_out_of_range: false
+      - throttle: 30s
+    on_value:
+      then:
+        - logger.log:
+            level: INFO
+            format: "Remote temperature received from HA: %.1f C"
+            args: ["x"]
+        - lambda: "id(hp).set_remote_temperature(x);"
+    on_raw_value: 
+      then:
+        - logger.log:
+            level: INFO
+            format: "Raw value from HA: %.1f F"
+            args: ["x"]
+
+external_components:
+  - source: github://echavet/MitsubishiCN105ESPHome
+
+# Default logging level
+logger:
+  #  hardware_uart: UART1 # Uncomment on ESP8266 devices
+  level: INFO
+
+climate:
+  - platform: cn105
+    id: hp
+    name: "${friendly_name}"
+    update_interval: 2s
+    fahrenheit_compatibility: 'True'
+    vertical_vane_select:
+      name: Vertical Vane
+      disabled_by_default: 'False'
+    horizontal_vane_select:
+      name: Horizontal Vane
+      disabled_by_default: 'True'
+    night_mode_switch:
+      name: Night mode
+      disabled_by_default: 'False'
