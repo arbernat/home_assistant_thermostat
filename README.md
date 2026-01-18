@@ -57,7 +57,7 @@ This is the big one. There are multiple categories of sensors, climate entities,
 
 * Climate: The ESP32 widgets are named [climate.becky, climate.danny, climate.downstairs, climate.office, climate.upstairs]
 * Sensors: The 3rd reality thermometers expose the following sensors:
-* * Thermometers: sensor.thermometer_becky_temperature, sensor.thermometer_danny_temperature, sensor.thermometer_upstairs_temperature. There are also three downstairs (same naming pattern, Library, Living Room, and Kitchen)
+  * Thermometers: sensor.thermometer_becky_temperature, sensor.thermometer_danny_temperature, sensor.thermometer_upstairs_temperature. There are also three downstairs (same naming pattern, Library, Living Room, and Kitchen)
   * Humidity: sensor.thermometer_becky_humidity, etc.
 * An averaged sensor.thermometer_downstairs_composite. This is implemented as a "combine the state of several sensors" helper. Similarly for humidity.
 * Dropdowns for the desired temperature of each room. The set is as described above [Warm, Normal, Cool, Cold, Unoccupied, Off]. The naming scheme is input_select.temperature_<room>; e.g. input_select.temperature_becky
