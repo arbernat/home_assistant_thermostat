@@ -51,6 +51,14 @@ The ESP32 configuration consists of the files in esp32/. There is a shared "AC.y
 
 I used ESP32 boards are described above (https://jhthompson12.github.io/2025-01-27-MiniSplit-Controller/). To initially flash the boards I plugged them into the Home Assistant Green (not my laptop). I then held both buttons (reset and 0), released reset, and released 0. This let me flash the initial image. Since then flashing via WiFi has been fine. As you can see in the files I use static IPs for each ESP32.
 
+Update: I was having periodic issues with the ESP32 in the crawlspace losing connectivity and requiring a power cycle to work. It turns out the WiFi signal is terrible down there, so I moved to a PoE (Power over Ethernet) board instead and it's been 100% reliable. This was more complicated since I wanted to isolate the board power from the AC power. Here's what I used:
+* ESP32-S3 with PoE: https://www.amazon.com/dp/B0DKXFB7PW?ref=ppx_yo2ov_dt_b_fed_asin_title&th=1
+* 2-channel optocoupler: https://www.amazon.com/dp/B0725BJMTQ?ref=ppx_yo2ov_dt_b_fed_asin_title
+* A random solderable breadboard that was big enough to hold everything: https://www.amazon.com/dp/B09WZXHMDG?ref=ppx_yo2ov_dt_b_fed_asin_title&th=1
+* A 10k pull-up resistor across the AC's send side
+
+After one oops (... you can still configure a hardwired ethernet board for WiFi and just get power over Ethernet) it's been great. 
+
 # Home Assistant Configuration
 
 This is the big one. There are multiple categories of sensors, climate entities, and helpers.
